@@ -31,6 +31,6 @@ class City extends Model
      */
     public function officeSpace(): HasMany
     {
-        return $this->hasMany(officeSpace::class);
+        return $this->hasMany(OfficeSpace::class);
     }
 }
