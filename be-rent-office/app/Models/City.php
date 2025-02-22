@@ -29,7 +29,7 @@ class City extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function officeSpace(): HasMany
+    public function officeSpaces(): HasMany
     {
         return $this->hasMany(OfficeSpace::class);
     }
