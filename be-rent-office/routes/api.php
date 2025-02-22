@@ -2,9 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controller\Api\CityController;
-use App\Http\Controller\Api\OfficeSpaceController;
-use App\Http\Controller\Api\BookingTransactionController;
+use App\Http\Controllers\Api\CityController;
+use App\Http\Controllers\Api\OfficeSpaceController;
+use App\Http\Controllers\Api\BookingTransactionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
