@@ -27,7 +27,7 @@ class BookingTransaction extends Model
         $prefix = 'TRANS';
         do {
             $randomString = $prefix . mt_rand(1000, 9999);
-        } while (self::where('booking_trans_id', $randomString)->exists());
+        } while (self::where('booking_trx_id', $randomString)->exists());
 
         return $randomString;
     }
