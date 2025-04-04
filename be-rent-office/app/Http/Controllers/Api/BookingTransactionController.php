@@ -9,6 +9,7 @@ use App\Http\Resources\Api\BookingTransactionResource;
 use App\Http\Resources\Api\ViewBookingResource;
 use App\Models\OfficeSpace;
 use Illuminate\Http\Request;
+use Twilio\Rest\Client;
 
 class BookingTransactionController extends Controller
 {
@@ -48,6 +49,22 @@ class BookingTransactionController extends Controller
         $bookingTransaction = BookingTransaction::create($validateData);
 
         // SMS atau WhatsApp
+        $sid = getenv("TWILIO_ACCOUNT_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio = new Client($sid, $token);
+
+        $messageBody = "Hi {$bookingTransaction->name}, Terima kasih telah booking kantor di FirstOffice.\n\n";
+        $messageBody .= "Pesanan kantor {$bookingTransaction->officeSpace->name} Anda sedang kami proses dengan Booking TRX ID: {$bookingTransaction->booking_trx_id}.\n\n";
+        $messageBody .= "Kami akan menginformasikan kembali status pemesanan Anda secepat mungkin.";
+
+        $message = $twilio->messages->create(
+            // "+6289666151134",
+            "+{$bookingTransaction->phone_number}",
+            [
+                "body" => $messageBody,
+                "from" => getenv("TWILIO_PHONE_NUMBER")
+            ]
+        );
 
         $bookingTransaction->load('officeSpace');
         return new BookingTransactionResource($bookingTransaction);
