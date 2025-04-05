@@ -5,6 +5,7 @@ import { z } from "zod";
 import axios from "axios";
 import { bookingSchema } from "../types/validationBooking";
 import Navbar from "../components/Navbar";
+import apiClient, { BASE_STORAGE_URL, isAxiosError } from "../services/apiServices";
 
 export default function BookOffice() {
     const { slug } = useParams<{ slug: string }>();
@@ -31,39 +32,36 @@ export default function BookOffice() {
 
     useEffect(() => {
         console.log("Fetching office data...");
-        axios.get(`http://127.0.0.1:8000/api/office/${slug}`, {
-            headers: {
-                "X-API-KEY": "jky1377a8sd8a77821g3k2jlasdhk1a32e"
-            }
-        }).then((res) => {
-            console.log("Office data fetched successfully", res.data.data);
+        apiClient.get(`/office/${slug}`)
+            .then((res) => {
+                console.log("Office data fetched successfully", res.data.data);
 
-            setOffice(res.data.data);
+                setOffice(res.data.data);
 
-            const officeSpaceId = res.data.data.id;
-            const generatedUniqueCode = Math.floor(100 + Math.random() * 900);
-            const grandTotal = res.data.data.price - generatedUniqueCode;
+                const officeSpaceId = res.data.data.id;
+                const generatedUniqueCode = Math.floor(100 + Math.random() * 900);
+                const grandTotal = res.data.data.price - generatedUniqueCode;
 
-            setUniqueCode(generatedUniqueCode);
-            setTotalAmountWithUniqueCode(grandTotal);
+                setUniqueCode(generatedUniqueCode);
+                setTotalAmountWithUniqueCode(grandTotal);
 
-            setFormData((prevData) => ({
-                ...prevData,
-                office_space_id: officeSpaceId,
-                total_amount: grandTotal
-            }));
+                setFormData((prevData) => ({
+                    ...prevData,
+                    office_space_id: officeSpaceId,
+                    total_amount: grandTotal
+                }));
 
-            setLoading(false);
-        }).catch((err) => {
-            if (axios.isAxiosError(err)) {
-                console.log('Error fetching office data:', err.message);
-                setError(err.message);
-            } else {
-                console.log("Unexpected error:", err);
-                setError("An unexpected error occurred");
-            }
-            setLoading(false);
-        })
+                setLoading(false);
+            }).catch((err) => {
+                if (isAxiosError(err)) {
+                    console.log('Error fetching office data:', err.message);
+                    setError(err.message);
+                } else {
+                    console.log("Unexpected error:", err);
+                    setError("An unexpected error occurred");
+                }
+                setLoading(false);
+            })
     }, [slug]);
 
     if (loading) {
@@ -77,8 +75,6 @@ export default function BookOffice() {
     if (!office) {
         return <p>Data not found</p>;
     }
-
-    const baseURL = "http://127.0.0.1:8000/storage";
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -104,16 +100,11 @@ export default function BookOffice() {
         setIsLoading(true);
 
         try {
-            const response = await axios.post(
-                "http://127.0.0.1:8000/api/booking-transaction",
+            const response = await apiClient.post(
+                "/booking-transaction",
                 {
                     ...formData
                 },
-                {
-                    headers: {
-                        "X-API-KEY": "jky1377a8sd8a77821g3k2jlasdhk1a32e"
-                    },
-                }
             );
 
             console.log("Form submitted successfully", response.data);
@@ -125,7 +116,7 @@ export default function BookOffice() {
                 }
             });
         } catch (error) {
-            if (axios.isAxiosError(error)) {
+            if (isAxiosError(error)) {
                 console.log("Error submitting form", error.message);
                 setError(error.message);
             } else {
@@ -150,7 +141,7 @@ export default function BookOffice() {
                 </h1>
                 <div className="absolute w-full h-full bg-[linear-gradient(180deg,_rgba(0,0,0,0)_0%,#000000_91.83%)] z-10" />
                 <img
-                    src={`${baseURL}/${office.thumbnail}`}
+                    src={`${BASE_STORAGE_URL}/${office.thumbnail}`}
                     className="absolute w-full h-full object-cover object-top"
                     alt=""
                 />

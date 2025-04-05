@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Office } from "../types/type";
 import axios from "axios";
+import { BASE_STORAGE_URL } from "../services/apiServices";
 
 export default function Details() {
     const { slug } = useParams<{ slug: string }>();
@@ -37,8 +38,6 @@ export default function Details() {
         return <p>Data Not Found.</p>
     }
 
-    const baseURL = "http://127.0.0.1:8000/storage";
-
     return (
         <>
             <Navbar></Navbar>
@@ -55,7 +54,7 @@ export default function Details() {
                             <SwiperSlide className="!w-fit">
                                 <div className="w-[700px] h-[550px] overflow-hidden">
                                     <img
-                                        src={`${baseURL}/${office.thumbnail}`}
+                                        src={`${BASE_STORAGE_URL}/${office.thumbnail}`}
                                         className="w-full h-full object-cover"
                                         alt="thumbnail"
                                     />
@@ -66,7 +65,7 @@ export default function Details() {
                                 <SwiperSlide key={photo.id} className="!w-fit">
                                     <div className="w-[700px] h-[550px] overflow-hidden">
                                         <img
-                                            src={`${baseURL}/${photo.photo}`}
+                                            src={`${BASE_STORAGE_URL}/${photo.photo}`}
                                             className="w-full h-full object-cover"
                                             alt="thumbnail"
                                         />

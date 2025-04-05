@@ -1,11 +1,10 @@
 import { Link, useLocation } from "react-router-dom"
 import Navbar from "../components/Navbar";
+import { BASE_STORAGE_URL } from "../services/apiServices";
 
 export default function SuccessBooking() {
     const location = useLocation();
     const { office, booking } = location.state;
-
-    const baseURL = "http://127.0.0.1:8000/storage";
 
     return (
         <>
@@ -26,7 +25,7 @@ export default function SuccessBooking() {
                     <div className="flex items-center gap-4">
                         <div className="flex shrink-0 w-[140px] h-[100px] rounded-[20px] overflow-hidden">
                             <img
-                                src={`${baseURL}/${office.thumbnail}`}
+                                src={`${BASE_STORAGE_URL}/${office.thumbnail}`}
                                 className="w-full h-full object-cover"
                                 alt="thumbnail"
                             />

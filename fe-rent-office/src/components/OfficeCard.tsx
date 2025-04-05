@@ -1,8 +1,7 @@
+import { BASE_STORAGE_URL } from "../services/apiServices";
 import { Office } from "../types/type"
 
 export default function OfficeCard({ office }: OfficeCardProps) {
-    const baseURL = "http://127.0.0.1:8000/storage";
-
     return (
         <div className="card">
             <div className="flex flex-col rounded-[20px] border border-[#E0DEF7] bg-white overflow-hidden">
@@ -11,7 +10,7 @@ export default function OfficeCard({ office }: OfficeCardProps) {
                         Popular
                     </p>
                     <img
-                        src={`${baseURL}/${office.thumbnail}`}
+                        src={`${BASE_STORAGE_URL}/${office.thumbnail}`}
                         className="w-full h-full object-cover"
                         alt="thumbnails"
                     />

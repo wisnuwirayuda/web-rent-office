@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { City } from "../types/type";
-import axios from "axios";
 import OfficeCard from "../components/OfficeCard";
 import Navbar from "../components/Navbar";
+import apiClient, { BASE_STORAGE_URL } from "../services/apiServices";
 
 export default function CityDetails() {
     const { slug } = useParams<{ slug: string }>();
@@ -12,17 +12,14 @@ export default function CityDetails() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/city/${slug}`, {
-            headers: {
-                "X-API-KEY": "jky1377a8sd8a77821g3k2jlasdhk1a32e"
-            },
-        }).then((res) => {
-            setCity(res.data.data);
-            setLoading(false);
-        }).catch((err) => {
-            setError(err);
-            setLoading(false);
-        });
+        apiClient.get(`/city/${slug}`)
+            .then((res) => {
+                setCity(res.data.data);
+                setLoading(false);
+            }).catch((err) => {
+                setError(err);
+                setLoading(false);
+            });
     }, [slug]);
 
     if (loading) {
@@ -36,8 +33,6 @@ export default function CityDetails() {
     if (!city) {
         return <p>Category not found</p>;
     }
-
-    const baseURL = "http://127.0.0.1:8000/storage";
 
     return (
         <>
@@ -62,7 +57,7 @@ export default function CityDetails() {
                         className="absolute right-0 w-[calc(100%-((100%-1130px)/2)-305px)] h-[434px] rounded-bl-[40px] overflow-hidden"
                     >
                         <img
-                            src={`${baseURL}/${city.photo}`}
+                            src={`${BASE_STORAGE_URL}/${city.photo}`}
                             className="w-full h-full object-cover"
                             alt="hero background"
                         />
