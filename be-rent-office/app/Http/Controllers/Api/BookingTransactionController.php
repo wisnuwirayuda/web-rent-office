@@ -53,17 +53,27 @@ class BookingTransactionController extends Controller
         $token = getenv("TWILIO_AUTH_TOKEN");
         $twilio = new Client($sid, $token);
 
-        $messageBody = "Hi {$bookingTransaction->name}, Terima kasih telah booking kantor di FirstOffice.\n\n";
+        $messageBody = "Hi {$bookingTransaction->name}, Terima kasih telah booking kantor di WisnuOffice.\n\n";
         $messageBody .= "Pesanan kantor {$bookingTransaction->officeSpace->name} Anda sedang kami proses dengan Booking TRX ID: {$bookingTransaction->booking_trx_id}.\n\n";
         $messageBody .= "Kami akan menginformasikan kembali status pemesanan Anda secepat mungkin.";
 
+        // FITUR KIRIM SMS
+        // $message = $twilio->messages->create(
+        //     // "+6289666151134",
+        //     "+{$bookingTransaction->phone_number}",
+        //     [
+        //         "body" => $messageBody,
+        //         "from" => getenv("TWILIO_PHONE_NUMBER")
+        //     ]
+        // );
+
+        // FITUR KIRIM WHATSAPP
         $message = $twilio->messages->create(
-            // "+6289666151134",
-            "+{$bookingTransaction->phone_number}",
-            [
+            "whatsapp:+{$bookingTransaction->phone_number}",
+            array(
                 "body" => $messageBody,
-                "from" => getenv("TWILIO_PHONE_NUMBER")
-            ]
+                "from" => "whatsapp:+14155238886"
+            )
         );
 
         $bookingTransaction->load('officeSpace');

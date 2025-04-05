@@ -121,12 +121,22 @@ class BookingTransactionResource extends Resource
                             $messageBody .= "Silahkan datang kepada lokasi kantor {$record->officeSpace->name} untuk mulai menggunakan ruangan kerja tersebut.\n\n";
                             $messageBody .= "Jika Anda memiliki pertanyaan silahkan menghubungi CS kami di wisnuoffice.com/contact-us.";
 
+                            // FITUR KIRIM SMS
+                            // $message = $twilio->messages->create(
+                            //     "+{$record->phone_number}",
+                            //     [
+                            //         "body" => $messageBody,
+                            //         "from" => getenv("TWILIO_PHONE_NUMBER")
+                            //     ]
+                            // );
+
+                            // FITUR KIRIM WHATSAPP
                             $message = $twilio->messages->create(
-                                "+{$record->phone_number}",
-                                [
+                                "whatsapp:+{$record->phone_number}",
+                                array(
                                     "body" => $messageBody,
-                                    "from" => getenv("TWILIO_PHONE_NUMBER")
-                                ]
+                                    "from" => "whatsapp:+14155238886"
+                                )
                             );
                     })
                     ->color('success')
